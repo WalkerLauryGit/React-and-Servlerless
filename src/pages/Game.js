@@ -1,10 +1,28 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
+import {StyledGame, StyledScore, StyledTimer, StyledCharacter} from '../styled/Game'
+import {Strong} from '../styled/Random'
 
 const Game = () => {
+
+  const[score, setScore] = useState(0);
+
+ useEffect(() => {
+    const interval = setInterval(()=>{
+      setScore(prevScore=> prevScore+1)
+    }, 1000)
+    return()=>{
+      clearInterval(interval)
+    }
+ }, [score]);
+
+
+
   return (
-    <div>
-      <h1>Game</h1>
-    </div>
+    <StyledGame>
+      <StyledScore>Score: <Strong>{score}</Strong></StyledScore>
+      <StyledCharacter>A</StyledCharacter>
+      <StyledTimer>Time: <Strong>0:00</Strong></StyledTimer>
+    </StyledGame>
   );
 }
 
