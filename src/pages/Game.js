@@ -6,7 +6,7 @@ import {history} from 'react-router-dom'
 const Game = ({history}) => {
 
   const[score, setScore] = useState(0);
-  const MAX_SECONDS = 5;
+  const MAX_SECONDS = 90;
   const [ms, setMs] = useState(0);
   const [seconds, setSeconds] = useState(MAX_SECONDS);
 
@@ -45,6 +45,18 @@ const Game = ({history}) => {
       
       }
     }, [seconds, ms, history])
+
+    const keyUpHandler = (e) =>{
+      console.log(e.key);
+    }
+
+    useEffect(()=>{
+      document.addEventListener('keyup', keyUpHandler);
+      return () =>{
+        document.removeEventListener('keyup', keyUpHandler)
+      }
+    }, [])
+
 
   return (
     <StyledGame>
