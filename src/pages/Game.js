@@ -1,16 +1,20 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {StyledGame, StyledScore, StyledTimer, StyledCharacter} from '../styled/Game'
 import {Strong} from '../styled/Random'
 import {history} from 'react-router-dom'
+import { useScore } from '../contexts/ScoreContext';
 
 const Game = ({history}) => {
-
-  const[score, setScore] = useState(0);
-  const MAX_SECONDS = 90;
-  const [ms, setMs] = useState(0);
+  const characters = 'abcdefghijklmnopqrstuvwxyz1234567890'
+  const MAX_SECONDS = 5;
+  const[score, setScore] = useScore(-1);
+  const [currentCharacter, setCurrentCharacter] = useState('')
+  const [ms, setMs] = useState(999);
   const [seconds, setSeconds] = useState(MAX_SECONDS);
-
+  
     useEffect(() => {
+      setRandomCharacter()
+      setScore(0);
       const currentTime = new Date();
       const interval = setInterval(() => updateTime(currentTime), 1)
       return () => {
@@ -46,22 +50,36 @@ const Game = ({history}) => {
       }
     }, [seconds, ms, history])
 
-    const keyUpHandler = (e) =>{
-      console.log(e.key);
-    }
+    const keyUpHandler = useCallback((e) =>{
+      
+      if(e.key === currentCharacter){
+        setScore((prevScore)=> prevScore + 1);
+      }else{
+        if(score > 0){
+          setScore((prevScore) => prevScore-1)
+        }
+      }
+      setRandomCharacter()
+    }, [currentCharacter]);
 
     useEffect(()=>{
       document.addEventListener('keyup', keyUpHandler);
+      
       return () =>{
         document.removeEventListener('keyup', keyUpHandler)
       }
-    }, [])
+    }, [keyUpHandler])
 
+
+    const setRandomCharacter = () =>{
+      const randomInt = Math.floor(Math.random() * 36);
+      setCurrentCharacter(characters[randomInt]);
+    }
 
   return (
     <StyledGame>
       <StyledScore>Score: <Strong>{score}</Strong></StyledScore>
-      <StyledCharacter>A</StyledCharacter>
+      <StyledCharacter>{currentCharacter}</StyledCharacter>
       <StyledTimer>Time: <Strong>{seconds}:{ms}</Strong></StyledTimer>
     </StyledGame>
   );
