@@ -1,10 +1,10 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import {StyledGame, StyledScore, StyledTimer, StyledCharacter} from '../styled/Game'
 import {Strong} from '../styled/Random'
-import {history} from 'react-router-dom'
+// import {history} from 'react-router-dom'
 import { useScore } from '../contexts/ScoreContext';
 
-const Game = ({history}) => {
+const Game = (history) => {
   const characters = 'abcdefghijklmnopqrstuvwxyz1234567890'
   const MAX_SECONDS = 5;
   const[score, setScore] = useScore(-1);
